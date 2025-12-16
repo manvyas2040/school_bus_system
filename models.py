@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, Float, String, ForeignKey,DateTime
 from sqlalchemy.orm import relationship
 from sbr_db import Base
 import datetime
-
+#temp func
 class Route(Base):
     __tablename__ ="route"
     id = Column(Integer,primary_key=True,index=True)
