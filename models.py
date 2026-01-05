@@ -9,6 +9,7 @@ class Route(Base):
     name = Column(String, unique=True)
 
     buses = relationship("Bus", back_populates="route")
+    timetable =relationship("timetable",back_populates="routes")
 
 class Bus(Base):
     __tablename__ = "buses"
@@ -38,6 +39,16 @@ class Student(Base):
     bus_id = Column(Integer, ForeignKey("buses.id"))
 
     bus = relationship("Bus", back_populates="students")
+
+class Timetable(Base):
+    __tablename__ = "timetable"
+    id = Column(Integer,primary_key=True,index=True)
+    route_id = Column(Integer,ForeignKey("routes.id"))
+    stope_name = Column(String)
+    time = Column(String)
+
+    route = relationship("Route",back_populates="timetable")
+
 
 class GPS(Base):
     __tablename__ = "gps"

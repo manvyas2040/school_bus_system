@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional,List
 from datetime import datetime
 
 class RouteCreate(BaseModel):
@@ -19,6 +19,17 @@ class BusOut(BusCreate):
     class Config:
         from_attributes = True
 
+class DriverCreate(BaseModel):
+    username:str
+    password : str
+
+class DriverOut(BaseModel):
+    id : int
+    username : str
+    bus_id : Optional[int]
+    class Config:
+        from_attributes = True
+
 class StudentCreate(BaseModel):
     name: str
     roll: str
@@ -26,6 +37,19 @@ class StudentCreate(BaseModel):
 
 class StudentOut(StudentCreate):
     id: int
+    class Config:
+        from_attributes = True
+
+class TimetableCreate(BaseModel):
+    route_id : int
+    stop_name : str
+    time : str
+
+class TimetableOut(BaseModel):
+    id : int
+    route_id : int
+    stop_name : str
+    time : str
     class Config:
         from_attributes = True
 
@@ -40,3 +64,10 @@ class GPSOut(BaseModel):
     updated_at: datetime
     class Config:
         from_attributes = True
+
+class Token(BaseModel):
+    access_token :str
+    token_type : str
+
+class TokenPayload(BaseModel):
+    username : str

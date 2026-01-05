@@ -14,7 +14,16 @@ def home():
 
 @app.post("/routes", response_model=schemas.RouteOut)
 def create_route(r: schemas.RouteCreate, db: Session = Depends(get_db)):
-    return crud.create_route(db, r.name)
+    route = crud.create_route(db, r.name)
+
+    if not route:
+        raise HTTPException(
+            status_code=400,
+            detail="Route name already exists"
+        )
+
+    return route
+
 
 @app.post("/buses", response_model=schemas.BusOut)
 def create_bus(b: schemas.BusCreate, db: Session = Depends(get_db)):
