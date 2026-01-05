@@ -1,65 +1,50 @@
-from sqlalchemy import Column, Integer, Float, String, ForeignKey,DateTime
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from sbr_db import Base
+from sbr_db  import Base
 import datetime
-#temp  new func
-class Route(Base):
-    __tablename__ ="route"
-    id = Column(Integer,primary_key=True,index=True)
-    name = Column(String,unique=True,index=True)
 
-    buses =relationship("Bus",back_populates="route")
-    timetable = relationship("Timetable",back_populates="route")
+class Route(Base):
+    __tablename__ = "routes"
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True)
+
+    buses = relationship("Bus", back_populates="route")
 
 class Bus(Base):
     __tablename__ = "buses"
-    id = Column(Integer, primary_key=True, index=True)
-    number = Column(Integer, unique=True, index=True)
-    route_id = Column(Integer, ForeignKey("route.id"))
+    id = Column(Integer, primary_key=True)
+    number = Column(Integer, unique=True)
+    route_id = Column(Integer, ForeignKey("routes.id"))
 
     route = relationship("Route", back_populates="buses")
     driver = relationship("Driver", back_populates="bus", uselist=False)
-    students = relationship("Student", back_populates="bus")  
+    students = relationship("Student", back_populates="bus")
     gps = relationship("GPS", back_populates="bus", uselist=False)
 
 class Driver(Base):
-    __tablename__ = "driver"
-    id = Column(Integer,primary_key=True,index=True)
-    username = Column(String,unique=True,index=True)
+    __tablename__ = "drivers"
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True)
     hashed_password = Column(String)
-    bus_id = Column(Integer,ForeignKey("buses.id"))
+    bus_id = Column(Integer, ForeignKey("buses.id"))
 
-    bus = relationship("Bus",back_populates="driver")
+    bus = relationship("Bus", back_populates="driver")
 
 class Student(Base):
     __tablename__ = "students"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    roll = Column(String, index=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    roll = Column(String)
     bus_id = Column(Integer, ForeignKey("buses.id"))
 
-    bus = relationship("Bus", back_populates="students") 
-
-
-class Timetable(Base):
-    __tablename__ = "timetables"
-    id = Column(Integer,primary_key=True,index=True)
-    route_id = Column(Integer,ForeignKey("route.id"))
-    stop_name = Column(String)
-    time = Column(String)
-
-    route = relationship("Route",back_populates="timetable")
+    bus = relationship("Bus", back_populates="students")
 
 class GPS(Base):
-    __tablename__ ="gps"
-    id = Column(Integer,primary_key=True,index=True)
-    bus_id = Column(Integer,ForeignKey("buses.id"),index=True)
-    latitude = Column(Float,default=0.0)
-    longitude = Column(Float,default=0.0)
+    __tablename__ = "gps"
+    id = Column(Integer, primary_key=True)
+    bus_id = Column(Integer, ForeignKey("buses.id"), unique=True)
+    latitude = Column(Float, default=0.0)
+    longitude = Column(Float, default=0.0)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    bus = relationship("Bus",back_populates="gps")
-    
-
-
-
+    bus = relationship("Bus", back_populates="gps")

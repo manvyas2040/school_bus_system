@@ -3,29 +3,28 @@ from jose import jwt, JWTError
 from passlib.context import CryptContext
 from typing import Optional
 
+# secret — in prod store in env
+SECRET_KEY = "change_this_to_a_strong_secret"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 1 day for demo
 
-SECRET_KEY = "change_this_to_a_strong_secrte"
-ALGORITHM ="HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60*24
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-pwd_context =CryptContext(schemes=["bcrypt"],deprecated="auto")
+def verify_password(plain, hashed):
+    return pwd_context.verify(plain, hashed)
 
-def verify_password(plain,hashed):
-    return pwd_context.verify(plain,hashed)
-
-def get_password_hashed(password):
+def get_password_hash(password):
     return pwd_context.hash(password)
 
-def create_access_token(data : dict,expires_delta:Optional[timedelta]=None):
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
-    expire =datetime.utcnow()+(expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode,SECRET_KEY,algorithm=ALGORITHM)
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-def decode_token (token : str):
+def decode_token(token: str):
     try:
-        payload = jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
     except JWTError:
         return None
-    
