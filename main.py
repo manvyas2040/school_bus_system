@@ -4,8 +4,16 @@ from sbr_db import engine, SessionLocal, Base,get_db
 import models, schemas, crud
 from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
 from auth import create_access_token,decode_token
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="School Bus Management")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/driver/login")
 Base.metadata.create_all(bind=engine)
 
