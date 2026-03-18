@@ -5,4 +5,5 @@ psycopg2-binary
 pydantic
 python-jose[cryptography]
 passlib[bcrypt]
+argon2-cffi
 python-multipart
